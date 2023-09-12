@@ -6,12 +6,24 @@ import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 
 function App() {
-  const [count, setCount] = useState();
+  const [currentPage, setCurrentPage] = useState("login");
+  const [loggedUser, setLoggedUser] = useState("");
 
   return (
-    <>
-      <SignupForm />
-    </>
+    <div className="flex justify-center h-screen items-center">
+      {currentPage === "login" && (
+        <LoginForm
+          setCurrentPage={setCurrentPage}
+          setLoggedUser={setLoggedUser}
+        />
+      )}
+      {currentPage === "register" && (
+        <SignupForm setCurrentPage={setCurrentPage} />
+      )}
+      {currentPage === "dashboard"
+        ? console.log(loggedUser)
+        : console.log("please log in")}
+    </div>
   );
 }
 
