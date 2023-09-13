@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "./Input";
 
 const SignupForm = (props) => {
-  const userInfo = JSON.parse(localStorage.getItem("accounts"));
+  const [userInfo, setUserInfo] = useState({});
   const { setCurrentPage } = props;
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
@@ -25,6 +25,16 @@ const SignupForm = (props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
 
+  useEffect(
+    () =>
+      setUserInfo(
+        localStorage.getItem("accounts")
+          ? JSON.parse(localStorage.getItem("accounts"))
+          : []
+      ),
+    []
+  );
+
   const onUsernameChange = (e) => {
     setUsername(e.target.value);
     let errorMessage = "";
@@ -32,11 +42,11 @@ const SignupForm = (props) => {
     let userObject = userInfo.find(
       (userObject) => userObject.username === e.target.value
     );
-    if (e.target.value === "") {
-      errorMessage = "*Please input username!";
-    }
     if (userObject) {
       errorMessage = "*Username already Exist!";
+    }
+    if (e.target.value === "") {
+      errorMessage = "*Please input username!";
     }
     if (errorMessage.length != 0) {
       setUsernameError(errorMessage);
@@ -137,7 +147,20 @@ const SignupForm = (props) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    userInfo.push({ username: username, password: password });
+    let accountNumber = ("" + Math.random()).substring(2, 14);
+    while (
+      userInfo.find((userObject) => userObject.accountNumber === accountNumber)
+    )
+      accountNumber = ("" + Math.random()).substring(2, 14);
+    // console.log(accountNumber);
+    userInfo.push({
+      accountNumber: accountNumber,
+      username: username,
+      password: password,
+      fullname: firstName + " " + lastName,
+      balance: 0,
+      expenses: {},
+    });
     localStorage.removeItem("accounts");
     localStorage.setItem("accounts", JSON.stringify(userInfo));
     setCurrentPage("login");

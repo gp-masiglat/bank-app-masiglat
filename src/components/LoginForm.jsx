@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "./Input";
 
 const LoginForm = (props) => {
-  const userInfo = JSON.parse(localStorage.getItem("accounts"));
   const { setCurrentPage, setLoggedUser } = props;
   const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    if (localStorage.getItem("accounts"))
+      setUserInfo(JSON.parse(localStorage.getItem("accounts")));
+    else setCurrentPage("register");
+  }, []);
 
   const onUsernameChange = (e) => setUsername(e.target.value);
   const onPasswordChange = (e) => setPassword(e.target.value);
@@ -21,7 +27,7 @@ const LoginForm = (props) => {
     console.log(userInfo);
     if (userObject) {
       setCurrentPage("dashboard");
-      setLoggedUser(userObject);
+      setLoggedUser(userObject.accountNumber);
     } else setErrorMessage("Username or Password is incorrect!");
   };
 
