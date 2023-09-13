@@ -159,7 +159,7 @@ const SignupForm = (props) => {
       password: password,
       fullname: firstName + " " + lastName,
       balance: 0,
-      expenses: {},
+      expenses: [],
     });
     localStorage.removeItem("accounts");
     localStorage.setItem("accounts", JSON.stringify(userInfo));

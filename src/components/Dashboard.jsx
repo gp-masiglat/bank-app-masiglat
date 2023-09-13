@@ -6,7 +6,7 @@ const Dashboard = (props) => {
   };
   return (
     <>
-      <p>Current Logged User is {loggedUser} </p>
+      <p>Current Logged User is {loggedUser.accountNumber} </p>
       <button onClick={clickHandler}>Logout</button>
     </>
   );

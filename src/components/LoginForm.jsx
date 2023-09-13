@@ -27,7 +27,7 @@ const LoginForm = (props) => {
     console.log(userInfo);
     if (userObject) {
       setCurrentPage("dashboard");
-      setLoggedUser(userObject.accountNumber);
+      setLoggedUser(userObject);
     } else setErrorMessage("Username or Password is incorrect!");
   };
 
