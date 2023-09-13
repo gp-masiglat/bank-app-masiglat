@@ -1,47 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Input from "./Input";
 
-const userInfo = [
-  { username: "user1", password: "password1" },
-  { username: "user2", password: "password2" },
-];
-
 const LoginForm = (props) => {
+  const userInfo = JSON.parse(localStorage.getItem("accounts"));
   const { setCurrentPage, setLoggedUser } = props;
   const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const onUsernameChange = (e) => {
-    setUsername(e.target.value);
-    let usernameExist = false;
-
-    userInfo.forEach((user) => {
-      if (user.username === e.target.value) {
-        usernameExist = true;
-        return;
-      }
-    });
-    let message = "";
-    if (!usernameExist) setErrorMessage("User not found!");
-    else setErrorMessage("");
-  };
+  const onUsernameChange = (e) => setUsername(e.target.value);
   const onPasswordChange = (e) => setPassword(e.target.value);
+
   const submitHandler = (e) => {
     e.preventDefault();
-    userInfo.forEach((user) => {
-      if (user.username === username) {
-        if (user.password === password) {
-          // setLoggedUser(username);
-          // setCurrentPage("register");
-          console.log(e);
-        } else {
-          setErrorMessage("Username and Password did not match!");
-          setUsername("");
-          setPassword("");
-        }
-      }
-    });
+    let userObject = userInfo.find(
+      (userObject) =>
+        userObject.username === username && userObject.password === password
+    );
+
+    console.log(userInfo);
+    if (userObject) {
+      setCurrentPage("dashboard");
+      setLoggedUser(userObject);
+    } else setErrorMessage("Username or Password is incorrect!");
   };
 
   return (
@@ -68,9 +49,7 @@ const LoginForm = (props) => {
       <button
         className="bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-700 disabled:cursor-not-allowed"
         type="submit"
-        disabled={
-          username === "" || password === "" || errorMessage.length != 0
-        }
+        disabled={username === "" || password === ""}
       >
         Login
       </button>
