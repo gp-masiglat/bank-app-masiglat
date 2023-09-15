@@ -158,8 +158,10 @@ const SignupForm = (props) => {
       username: username,
       password: password,
       fullname: firstName + " " + lastName,
+      email: emailAddress,
       balance: 0,
       expenses: [],
+      transactions: [],
     });
     localStorage.removeItem("accounts");
     localStorage.setItem("accounts", JSON.stringify(userInfo));
@@ -167,7 +169,7 @@ const SignupForm = (props) => {
   };
   return (
     <form
-      className="flex flex-col w-1/2 items-center bg-gray-400 shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-5"
+      className="flex flex-col w-1/2 items-center bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-5"
       onSubmit={submitHandler}
     >
       <Input

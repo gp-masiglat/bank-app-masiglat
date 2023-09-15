@@ -24,7 +24,6 @@ const LoginForm = (props) => {
         userObject.username === username && userObject.password === password
     );
 
-    console.log(userInfo);
     if (userObject) {
       setCurrentPage("dashboard");
       setLoggedUser(userObject);
@@ -33,7 +32,7 @@ const LoginForm = (props) => {
 
   return (
     <form
-      className="flex flex-col w-1/2 items-center bg-gray-400 shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-5"
+      className="flex flex-col w-1/2 items-center bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-5"
       onSubmit={submitHandler}
     >
       <Input
