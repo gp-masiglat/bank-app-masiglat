@@ -72,20 +72,23 @@ const Modal = (props) => {
         amount: parseInt(modalItem),
         balance: loggedUser.balance,
         description: `fund transfer to ${receiverObject.accountNumber}`,
+        transactionDate: new Date(),
       });
-      receiverObject.transactions.push({
+      receiverObject.transactions.unshift({
         type: "Inward Transfer",
         amount: parseInt(modalItem),
         balance: receiverObject.balance,
         description: `fund transfer from ${loggedUser.accountNumber}`,
+        transactionDate: new Date(),
       });
       receiverObject.balance += parseInt(modalItem);
     } else {
-      loggedUser.transactions.push({
+      loggedUser.transactions.unshift({
         type: title,
         amount: parseInt(modalItem),
-        description: title,
         balance: loggedUser.balance,
+        description: title,
+        transactionDate: new Date(),
       });
     }
     userInfo[

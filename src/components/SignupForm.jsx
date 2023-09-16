@@ -161,6 +161,7 @@ const SignupForm = (props) => {
       fullname: firstName + " " + lastName,
       email: emailAddress,
       balance: 0,
+      dateCreated: new Date(),
       expenses: [],
       transactions: [],
     });
