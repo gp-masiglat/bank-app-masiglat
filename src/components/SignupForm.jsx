@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Input from "./Input";
+import bankLogo from "../assets/bank.svg";
 
 const SignupForm = (props) => {
   const [userInfo, setUserInfo] = useState({});
@@ -167,11 +168,13 @@ const SignupForm = (props) => {
     localStorage.setItem("accounts", JSON.stringify(userInfo));
     setCurrentPage("login");
   };
+
   return (
     <form
       className="flex flex-col w-1/2 items-center bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-5"
       onSubmit={submitHandler}
     >
+      <img src={bankLogo} className="w-20 h-20 mb-10" alt="bank logo" />
       <Input
         key="firstName"
         label="First Name"
@@ -232,6 +235,13 @@ const SignupForm = (props) => {
         disabled={errorFieldArray.length != 0}
       >
         Sign Up
+      </button>
+      <button
+        className="underline"
+        onClick={() => setCurrentPage("login")}
+        hidden={!localStorage.getItem("accounts")}
+      >
+        Back to Login
       </button>
     </form>
   );

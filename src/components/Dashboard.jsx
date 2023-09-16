@@ -1,5 +1,6 @@
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
+import bankLogo from "../assets/bank.svg";
 
 const Dashboard = (props) => {
   const { loggedUser, setLoggedUser, setCurrentPage } = props;
@@ -39,7 +40,8 @@ const Dashboard = (props) => {
         </div>
         <div className="p-8">
           <div className="rounded-2xl overflow-hidden shadow-lg">
-            <div className="flex justify-center p-10 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 ">
+            <div className="flex flex-col items-center justify-center px-10 pb-10 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 ">
+              <img src={bankLogo} className="w-20 h-20 mb-10" alt="bank logo" />
               <div className="w-full h-64 bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900 rounded-lg shadow-lg shadow-2xl transition-transform transform hover:scale-110">
                 <div className="flex justify-between m-2">
                   <svg
@@ -89,7 +91,7 @@ const Dashboard = (props) => {
                   </div>
                   <div className="flex flex-col justfiy-end w-1/2 mt-4 p-4 text-gray-400 font-quick">
                     <p className="font-bold text-xl">Balance (PHP)</p>
-                    <h4 className="uppercase tracking-wider font-semibold text-4xl">
+                    <h4 className="uppercase tracking-wider font-semibold text-4xl ml-4">
                       {loggedUser.balance}
                     </h4>
                   </div>

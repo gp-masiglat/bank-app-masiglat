@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Input from "./Input";
+import bankLogo from "../assets/bank.svg";
 
 const LoginForm = (props) => {
   const { setCurrentPage, setLoggedUser } = props;
@@ -31,42 +32,45 @@ const LoginForm = (props) => {
   };
 
   return (
-    <form
-      className="flex flex-col w-1/2 items-center bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-5"
-      onSubmit={submitHandler}
-    >
-      <Input
-        key="username"
-        label="Username"
-        type="text"
-        id="username"
-        value={username}
-        onChange={onUsernameChange}
-      />
-      <Input
-        key="password"
-        label="Password"
-        type="password"
-        id="password"
-        value={password}
-        onChange={onPasswordChange}
-      />
-      <button
-        className="bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-700 disabled:cursor-not-allowed"
-        type="submit"
-        disabled={username === "" || password === ""}
+    <>
+      <form
+        className="flex flex-col w-1/2 items-center bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 shadow-md rounded px-8 pt-6 pb-8 mb-4 space-y-5"
+        onSubmit={submitHandler}
       >
-        Login
-      </button>
-      <h1 className="text-red-700 text-m">{errorMessage}</h1>
-      <a
-        className="underline"
-        href="#"
-        onClick={() => setCurrentPage("register")}
-      >
-        Create Account
-      </a>
-    </form>
+        <img src={bankLogo} className="w-20 h-20 mb-10" alt="bank logo" />
+        <Input
+          key="username"
+          label="Username"
+          type="text"
+          id="username"
+          value={username}
+          onChange={onUsernameChange}
+        />
+        <Input
+          key="password"
+          label="Password"
+          type="password"
+          id="password"
+          value={password}
+          onChange={onPasswordChange}
+        />
+        <button
+          className="bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-700 disabled:cursor-not-allowed"
+          type="submit"
+          disabled={username === "" || password === ""}
+        >
+          Login
+        </button>
+        <h1 className="text-red-700 text-m">{errorMessage}</h1>
+        <a
+          className="underline"
+          href="#"
+          onClick={() => setCurrentPage("register")}
+        >
+          Create Account
+        </a>
+      </form>
+    </>
   );
 };
 
