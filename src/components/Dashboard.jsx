@@ -1,10 +1,12 @@
-import Modal from "./Modal";
+import TransactionModal from "./TransactionModal";
+import Records from "./Records";
 import { useEffect, useState } from "react";
 import bankLogo from "../assets/bank.svg";
 
 const Dashboard = (props) => {
   const { loggedUser, setLoggedUser, setCurrentPage } = props;
   const [showModal, setShowModal] = useState(false);
+  const [showRecords, setShowRecords] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   // const [modalItem, setModalItem] = useState(0);
 
@@ -12,7 +14,7 @@ const Dashboard = (props) => {
   //   loggedUser += modalItem;
   // }, [modalItem]);
 
-  const buttonClickHandler = (e) => {
+  const transactionButtonClickHandler = (e) => {
     setModalTitle(e.target.value);
     setShowModal(true);
   };
@@ -22,16 +24,20 @@ const Dashboard = (props) => {
   };
   return (
     <>
-      {showModal ? (
-        <Modal
+      {showModal && (
+        <TransactionModal
           setShowModal={setShowModal}
           title={modalTitle}
           loggedUser={loggedUser}
         />
-      ) : (
-        ""
       )}
-      <div className="w-1/3 h-full flex flex-col">
+      {showRecords && (
+        <Records
+          setShowRecords={setShowRecords}
+          data={loggedUser.transactions}
+        />
+      )}
+      <div className="w-2/5 h-full flex flex-col">
         <div className="flex justify-between w-full">
           <p>Current Logged User: {loggedUser.username} </p>
           <button className="underline" onClick={logoutHandler}>
@@ -39,11 +45,11 @@ const Dashboard = (props) => {
           </button>
         </div>
         <div className="p-8">
-          <div className="rounded-2xl overflow-hidden shadow-lg">
+          <div className="flex flex-col justify-center rounded-2xl overflow-hidden shadow-lg">
             <div className="flex flex-col items-center justify-center px-10 pb-10 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 ">
               <img src={bankLogo} className="w-20 h-20 mb-10" alt="bank logo" />
-              <div className="w-full h-64 bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900 rounded-lg shadow-lg shadow-2xl transition-transform transform hover:scale-110">
-                <div className="flex justify-between m-2">
+              <div className="flex flex-col w-full h-64 items-center bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900 rounded-lg shadow-lg shadow-2xl transition-transform transform hover:scale-110">
+                <div className="flex justify-between w-full m-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="40"
@@ -82,6 +88,7 @@ const Dashboard = (props) => {
                     {loggedUser.accountNumber.match(/.{3}/g).join(" ")}
                   </h1>
                 </div>
+                <div className="w-4/5 bg-black mt-4 h-8 self-center"></div>
                 <div className="flex w-full items-center">
                   <div className="flex flex-col items-center justfiy-end w-1/2 mt-4 p-4 text-gray-400 font-quick">
                     <p className="font-bold text-xs">Account Name</p>
@@ -99,16 +106,31 @@ const Dashboard = (props) => {
               </div>
             </div>
             <div className="flex text-center mt-8 mb-2 font-quick justify-evenly">
-              <button value="Deposit" onClick={buttonClickHandler}>
+              <button
+                className="text-gray active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-blue-400"
+                value="Deposit"
+                onClick={transactionButtonClickHandler}
+              >
                 Deposit
               </button>
-              <button value="Withdraw" onClick={buttonClickHandler}>
+              <button
+                className="text-gray active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-blue-400"
+                value="Withdraw"
+                onClick={transactionButtonClickHandler}
+              >
                 Withdrawal
               </button>
-              <button value="Transfer" onClick={buttonClickHandler}>
+              <button
+                className="text-gray active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-blue-400"
+                value="Transfer"
+                onClick={transactionButtonClickHandler}
+              >
                 Transfer
               </button>
             </div>
+            <button value="" onClick={() => setShowRecords(true)}>
+              Show All Transactions
+            </button>
           </div>
         </div>
       </div>
