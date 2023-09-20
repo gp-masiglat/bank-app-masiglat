@@ -1,5 +1,5 @@
 const Input = (props) => {
-  const { label, type, id, onChange, required, value } = props; // is an object
+  const { label, type, id, onChange, value } = props; // is an object
 
   return (
     <div className="w-full">

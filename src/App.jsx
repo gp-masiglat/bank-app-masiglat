@@ -14,7 +14,7 @@ function App() {
   // }, []);
 
   const [currentPage, setCurrentPage] = useState("login");
-  const [loggedUser, setLoggedUser] = useState("");
+  const [loggedUser, setLoggedUser] = useState({});
 
   return (
     <div className="flex flex-col justify-center h-screen items-center">

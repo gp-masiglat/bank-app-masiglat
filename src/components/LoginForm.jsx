@@ -7,28 +7,26 @@ const LoginForm = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [userInfo, setUserInfo] = useState({});
-
-  useEffect(() => {
-    if (localStorage.getItem("accounts"))
-      setUserInfo(JSON.parse(localStorage.getItem("accounts")));
-    else setCurrentPage("register");
-  }, []);
+  // const [userInfo, setUserInfo] = useState([]);
 
   const onUsernameChange = (e) => setUsername(e.target.value);
   const onPasswordChange = (e) => setPassword(e.target.value);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    let userObject = userInfo.find(
-      (userObject) =>
-        userObject.username === username && userObject.password === password
-    );
+    const userInfo = JSON.parse(localStorage.getItem("accounts"));
+    if (userInfo != undefined) {
+      let userObject = userInfo.find(
+        (userObject) =>
+          userObject.username === username && userObject.password === password
+      );
 
-    if (userObject) {
-      setCurrentPage("dashboard");
-      setLoggedUser(userObject);
-    } else setErrorMessage("Username or Password is incorrect!");
+      if (userObject) {
+        setCurrentPage("dashboard");
+        setLoggedUser(userObject);
+      }
+    }
+    setErrorMessage("Username or Password is incorrect!");
   };
 
   return (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Input from "./Input";
 
-const Modal = (props) => {
+const TransactionModal = (props) => {
   const { setShowModal, title, loggedUser } = props;
   const [modalItem, setModalItem] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -9,7 +9,7 @@ const Modal = (props) => {
   const [receiverObject, setReceiverObject] = useState({});
   const [userInfo, setUserInfo] = useState({});
   const [receiverError, setReceiverError] = useState(false);
-  const [transactionInfo, setTransactionInfo] = useState({});
+  // const [transactionInfo, setTransactionInfo] = useState({});
 
   useEffect(() => {
     // if (title === "Transfer") {
@@ -26,9 +26,8 @@ const Modal = (props) => {
   const onModalItemChange = (e) => {
     const re = /^[0-9\b]+$/;
 
-    if (e.target.value === "" || re.test(e.target.value)) {
-      setModalItem(e.target.value);
-    }
+    if (e.target.value === "") setModalItem(0);
+    if (re.test(e.target.value)) setModalItem(e.target.value);
 
     setErrorMessage(
       title != "Deposit" && e.target.value > loggedUser.balance
@@ -67,7 +66,11 @@ const Modal = (props) => {
   const modalSubmitHandler = () => {
     loggedUser.balance += (title === "Deposit" ? 1 : -1) * modalItem;
     if (title === "Transfer") {
+      receiverObject.balance += parseInt(modalItem);
       loggedUser.transactions.push({
+        transactionId: (
+          "TR" + Math.floor(Date.now() * Math.random())
+        ).substring(0, 6),
         type: "Outward Transfer",
         amount: parseInt(modalItem),
         balance: loggedUser.balance,
@@ -75,15 +78,20 @@ const Modal = (props) => {
         transactionDate: new Date(),
       });
       receiverObject.transactions.unshift({
+        transactionId: (
+          "TR" + Math.floor(Date.now() * Math.random())
+        ).substring(0, 6),
         type: "Inward Transfer",
         amount: parseInt(modalItem),
         balance: receiverObject.balance,
         description: `fund transfer from ${loggedUser.accountNumber}`,
         transactionDate: new Date(),
       });
-      receiverObject.balance += parseInt(modalItem);
     } else {
       loggedUser.transactions.unshift({
+        transactionId: (
+          "TR" + Math.floor(Date.now() * Math.random())
+        ).substring(0, 6),
         type: title,
         amount: parseInt(modalItem),
         balance: loggedUser.balance,
@@ -97,12 +105,13 @@ const Modal = (props) => {
       })
     ] = loggedUser;
     localStorage.setItem("accounts", JSON.stringify(userInfo));
+    // console.log(JSON.stringify(userInfo));
     setShowModal(false);
   };
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+        <div className="relative w-2/5 my-6 mx-auto max-w-3xl">
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
@@ -119,7 +128,7 @@ const Modal = (props) => {
             </div>
             {/*body*/}
             <div className="relative p-6 flex-auto">
-              {title === "Transfer" ? (
+              {title === "Transfer" && (
                 <Input
                   key="receiver"
                   label="Receiver's Account Number"
@@ -128,8 +137,6 @@ const Modal = (props) => {
                   value={receiverItem}
                   onChange={onReceiverItemChange}
                 />
-              ) : (
-                ""
               )}
               <Input
                 key="modalItem"
@@ -170,4 +177,4 @@ const Modal = (props) => {
   );
 };
 
-export default Modal;
+export default TransactionModal;

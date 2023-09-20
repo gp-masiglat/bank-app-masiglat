@@ -3,21 +3,21 @@ import Input from "./Input";
 import bankLogo from "../assets/bank.svg";
 
 const SignupForm = (props) => {
-  const [userInfo, setUserInfo] = useState({});
   const { setCurrentPage } = props;
+  // const [userInfo, setUserInfo] = useState([]);
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [cofimPasswordError, setconfirmPasswordError] = useState("");
+  const [cofimPasswordError, setConfirmPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [errorFieldArray, setError] = useState([
-    "First Name",
-    "Last Name",
-    "Username",
-    "Password",
-    "Confirm Password",
-    "Email Address",
+    { errorField: "First Name" },
+    { errorField: "Last Name" },
+    { errorField: "Username" },
+    { errorField: "Password" },
+    { errorField: "Confirm Password" },
+    { errorField: "Email Address" },
   ]);
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -26,42 +26,38 @@ const SignupForm = (props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
 
-  useEffect(
-    () =>
-      setUserInfo(
-        localStorage.getItem("accounts")
-          ? JSON.parse(localStorage.getItem("accounts"))
-          : []
-      ),
-    []
-  );
+  // useEffect(() => {
+  //   console.log(new Date());
+  // }, []);
+
+  useEffect(() => {
+    if (confirmPassword != "")
+      onConfirmPasswordChange({ target: { value: confirmPassword } });
+  }, [password]);
+
+  const checkIfEmpty = (fieldName, value) => {
+    let errorObject = errorFieldArray.findIndex(
+      (userObject) => userObject.errorField === fieldName
+    );
+    if (value === "") {
+      if (!errorObject) errorFieldArray.push({ errorField: fieldName });
+      return `*Please input ${fieldName}!`;
+    }
+    if (errorObject > -1) errorFieldArray.splice(errorObject, 1);
+    return "";
+  };
 
   const onUsernameChange = (e) => {
     setUsername(e.target.value);
-    let errorMessage = "";
-
-    let userObject = userInfo.find(
-      (userObject) => userObject.username === e.target.value
-    );
-    if (userObject) {
-      errorMessage = "*Username already Exist!";
-    }
-    if (e.target.value === "") {
-      errorMessage = "*Please input username!";
-    }
-    if (errorMessage.length != 0) {
-      setUsernameError(errorMessage);
-      if (errorFieldArray.indexOf("Username") === -1)
-        errorFieldArray.push("Username");
-    } else {
-      setUsernameError("");
-      if (errorFieldArray.indexOf("Username") != -1)
-        errorFieldArray.splice(errorFieldArray.indexOf("Username"), 1);
-    }
+    setUsernameError(checkIfEmpty("Username", e.target.value));
   };
+
   const onPasswordChange = (e) => {
     let errorMessage = "";
     setPassword(e.target.value);
+    let errorObject = errorFieldArray.find(
+      (userObject) => userObject.errorField === "Password"
+    );
 
     errorMessage +=
       e.target.value.length < 8
@@ -79,81 +75,87 @@ const SignupForm = (props) => {
 
     if (errorMessage.length > 0) {
       setPasswordError(errorMessage);
-      if (errorFieldArray.indexOf("Password") === -1)
-        errorFieldArray.push("Password");
-    } else {
-      setPasswordError("");
-      if (errorFieldArray.indexOf("Password") != -1)
-        errorFieldArray.splice(errorFieldArray.indexOf("Password"), 1);
+      if (!errorObject) errorFieldArray.push({ errorField: "Password" });
+      return;
     }
+
+    if (errorObject)
+      errorFieldArray.splice(errorFieldArray.indexOf(errorObject), 1);
+    setPasswordError("");
   };
+
   const onFirstNameChange = (e) => {
     setFirstName(e.target.value.toUpperCase());
-
-    if (e.target.value === "") {
-      setFirstNameError("*Please input first name!");
-      errorFieldArray.push(
-        errorFieldArray.indexOf("First Name") === -1 ? "First Name" : ""
-      );
-    } else {
-      setFirstNameError("");
-      if (errorFieldArray.indexOf("First Name") != -1)
-        errorFieldArray.splice(errorFieldArray.indexOf("First Name"), 1);
-    }
+    setFirstNameError(checkIfEmpty("First Name", e.target.value));
   };
   const onLastNameChange = (e) => {
     setLastName(e.target.value.toUpperCase());
-
-    if (e.target.value === "") {
-      setLastNameError("*Please input last name!");
-      errorFieldArray.push(
-        errorFieldArray.indexOf("Last Name") === -1 ? "Last Name" : ""
-      );
-    } else {
-      setLastNameError("");
-      if (errorFieldArray.indexOf("Last Name") != -1)
-        errorFieldArray.splice(errorFieldArray.indexOf("Last Name"), 1);
-    }
+    setLastNameError(checkIfEmpty("Last Name", e.target.value));
   };
   const onConfirmPasswordChange = (e) => {
+    console.log(e.target.value);
     setConfirmPassword(e.target.value);
+    let errorObject = errorFieldArray.find(
+      (userObject) => userObject.errorField === "Confirm Password"
+    );
 
     if (password != e.target.value) {
-      setconfirmPasswordError("*Passwords do not match!");
-      if (errorFieldArray.indexOf("Confirm Password") === -1)
-        errorFieldArray.push("Confirm Password");
+      setConfirmPasswordError("*Passwords do not match!");
+      if (!errorObject) errorFieldArray.push("Confirm Password");
+      // return;
     } else {
-      setconfirmPasswordError("");
-      if (errorFieldArray.indexOf("Confirm Password") != -1)
-        errorFieldArray.splice(errorFieldArray.indexOf("Confirm Password"), 1);
+      if (errorObject)
+        errorFieldArray.splice(errorFieldArray.indexOf(errorObject), 1);
+      setConfirmPasswordError("");
     }
   };
+
   const onEmailAddressChange = (e) => {
     setEmailAddress(e.target.value.toUpperCase());
 
-    if (e.target.value == "") {
-      setEmailError("Email Address Cannot be empty!");
-    } else if (
-      !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)
-    ) {
+    let errorObject = errorFieldArray.find(
+      (userObject) => userObject.errorField === "Email Address"
+    );
+
+    if (e.target.value === "") setEmailError("Email Address Cannot be empty!");
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value))
       setEmailError("Please follow the following format (example@example.com");
-    } else {
-      if (emailError != "") {
-        setEmailError("");
-        if (errorFieldArray.indexOf("Email Address") != -1)
-          errorFieldArray.splice(errorFieldArray.indexOf("Email Address"), 1);
-      }
+
+    if (emailError != "") errorFieldArray.push("Email Address");
+    else {
+      // if (emailError != "") {
+      setEmailError("");
+      if (errorObject)
+        errorFieldArray.splice(errorFieldArray.indexOf(errorObject), 1);
+      setEmailError("");
+      // }
     }
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    let accountNumber = ("" + Math.random()).substring(2, 14);
-    while (
-      userInfo.find((userObject) => userObject.accountNumber === accountNumber)
-    )
-      accountNumber = ("" + Math.random()).substring(2, 14);
-    // console.log(accountNumber);
+
+    const userInfo = localStorage.getItem("accounts")
+      ? JSON.parse(localStorage.getItem("accounts"))
+      : [];
+
+    let userObject = userInfo.find(
+      (userObject) => userObject.username === username
+    );
+
+    if (userObject) {
+      setUsernameError("*Username already Exist!");
+      return;
+    }
+
+    // let accountNumber = ("" + Math.random()).substring(2, 14);
+    // while (
+    //   userInfo.find((userObject) => userObject.accountNumber === accountNumber)
+    // )
+    const accountNumber = (
+      "" + Math.floor(Date.now() * Math.random())
+    ).substring(0, 12);
+
     userInfo.push({
       accountNumber: accountNumber,
       username: username,
@@ -165,7 +167,8 @@ const SignupForm = (props) => {
       expenses: [],
       transactions: [],
     });
-    localStorage.removeItem("accounts");
+    // localStorage.removeItem("accounts");
+    // console.log(userInfo);
     localStorage.setItem("accounts", JSON.stringify(userInfo));
     setCurrentPage("login");
   };
@@ -237,11 +240,7 @@ const SignupForm = (props) => {
       >
         Sign Up
       </button>
-      <button
-        className="underline"
-        onClick={() => setCurrentPage("login")}
-        hidden={!localStorage.getItem("accounts")}
-      >
+      <button className="underline" onClick={() => setCurrentPage("login")}>
         Back to Login
       </button>
     </form>
