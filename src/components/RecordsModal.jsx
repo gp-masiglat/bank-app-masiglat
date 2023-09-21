@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 
 const Records = (props) => {
-  const { setShowRecords, data } = props;
+  const { setShowRecordsModal, data } = props;
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(5);
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -21,7 +21,7 @@ const Records = (props) => {
               <h3 className="text-3xl font-semibold">Transaction Records</h3>
               <button
                 className="p-1 ml-auto text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={() => setShowRecords(false)}
+                onClick={() => setShowRecordsModal(false)}
               >
                 <span className="text-black h-6 w-6 text-2xl block focus:outline-none">
                   ×
@@ -30,34 +30,41 @@ const Records = (props) => {
             </div>
             {/*body*/}
             <div className="relative p-6 flex-auto">
-              <table className="table-fixed text-center items-center">
+              <table className="table-fixed text-center items-center mb-8">
                 <thead>
                   <tr>
-                    <th className="w-1/5" scope="col">
+                    <th className="w-1/6" scope="col">
+                      Transaction Number
+                    </th>
+                    <th className="w-1/6" scope="col">
                       Type
                     </th>
-                    <th className="w-1/5" scope="col">
+                    <th className="w-1/6" scope="col">
                       Amount
                     </th>
-                    <th className="w-1/5" scope="col">
+                    <th className="w-1/6" scope="col">
                       Running Balance
                     </th>
-                    <th className="w-1/5" scope="col">
+                    <th className="w-1/6" scope="col">
                       Description
                     </th>
-                    <th className="w-1/5" scope="col">
+                    <th className="w-1/6" scope="col">
                       Transaction Date
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentRecords.map((item) => (
-                    <tr key={item.transactionId}>
+                    <tr
+                      key={item.transactionId}
+                      className="even:bg-amber-100 odd:bg-blue-100"
+                    >
+                      <td>{item.transactionId} </td>
                       <td>{item.type} </td>
                       <td>{item.amount} </td>
                       <td>{item.balance} </td>
                       <td>{item.description} </td>
-                      <td>{Date(item.transactionDate)} </td>
+                      <td>{Date(item.transactionDate).slice(0, 24)} </td>
                     </tr>
                   ))}
                 </tbody>
@@ -73,7 +80,7 @@ const Records = (props) => {
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowRecords(false)}
+                onClick={() => setShowRecordsModal(false)}
               >
                 Close
               </button>

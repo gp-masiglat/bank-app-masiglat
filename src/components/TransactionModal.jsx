@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Input from "./Input";
 
 const TransactionModal = (props) => {
-  const { setShowModal, title, loggedUser } = props;
+  const { setShowTransactionModal, title, loggedUser } = props;
   const [modalItem, setModalItem] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [receiverItem, setReceiverItem] = useState("");
@@ -75,7 +75,7 @@ const TransactionModal = (props) => {
         amount: parseInt(modalItem),
         balance: loggedUser.balance,
         description: `fund transfer to ${receiverObject.accountNumber}`,
-        transactionDate: new Date(),
+        transactionDate: new Date().toJSON(),
       });
       receiverObject.transactions.unshift({
         transactionId: (
@@ -85,7 +85,7 @@ const TransactionModal = (props) => {
         amount: parseInt(modalItem),
         balance: receiverObject.balance,
         description: `fund transfer from ${loggedUser.accountNumber}`,
-        transactionDate: new Date(),
+        transactionDate: new Date().toJSON(),
       });
     } else {
       loggedUser.transactions.unshift({
@@ -96,7 +96,7 @@ const TransactionModal = (props) => {
         amount: parseInt(modalItem),
         balance: loggedUser.balance,
         description: title,
-        transactionDate: new Date(),
+        transactionDate: new Date().toJSON(),
       });
     }
     userInfo[
@@ -106,7 +106,7 @@ const TransactionModal = (props) => {
     ] = loggedUser;
     localStorage.setItem("accounts", JSON.stringify(userInfo));
     // console.log(JSON.stringify(userInfo));
-    setShowModal(false);
+    setShowTransactionModal(false);
   };
   return (
     <>
@@ -119,7 +119,7 @@ const TransactionModal = (props) => {
               <h3 className="text-3xl font-semibold">{title}</h3>
               <button
                 className="p-1 ml-auto text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={() => setShowModal(false)}
+                onClick={() => setShowTransactionModal(false)}
               >
                 <span className="text-black h-6 w-6 text-2xl block focus:outline-none">
                   ×
@@ -156,7 +156,7 @@ const TransactionModal = (props) => {
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowModal(false)}
+                onClick={() => setShowTransactionModal(false)}
               >
                 Close
               </button>

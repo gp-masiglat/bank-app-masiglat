@@ -26,7 +26,7 @@ const Pagination = (props) => {
             </a>
           </li>
           {pageNumbers.map((pgNumber) => (
-            <li key={pgNumber} className={` : `}>
+            <li key={pgNumber}>
               <a
                 onClick={() => setCurrentPage(pgNumber)}
                 className={`flex items-center justify-center font-bold px-3 h-10 leading-tight text-gray-500 ${
