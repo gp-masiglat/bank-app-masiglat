@@ -71,20 +71,20 @@ const TransactionModal = (props) => {
         transactionId: (
           "TR" + Math.floor(Date.now() * Math.random())
         ).substring(0, 6),
-        type: "Outward Transfer",
+        type: "Fund Transfer",
         amount: parseInt(modalItem),
         balance: loggedUser.balance,
-        description: `fund transfer to ${receiverObject.accountNumber}`,
+        description: `Fund Transfer to ${receiverObject.accountNumber}`,
         transactionDate: new Date().toJSON(),
       });
       receiverObject.transactions.unshift({
         transactionId: (
           "TR" + Math.floor(Date.now() * Math.random())
         ).substring(0, 6),
-        type: "Inward Transfer",
+        type: "Fund Transfer",
         amount: parseInt(modalItem),
         balance: receiverObject.balance,
-        description: `fund transfer from ${loggedUser.accountNumber}`,
+        description: `Fund Transfer from ${loggedUser.accountNumber}`,
         transactionDate: new Date().toJSON(),
       });
     } else {

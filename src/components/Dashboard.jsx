@@ -3,6 +3,9 @@ import RecordsModal from "./RecordsModal";
 import ExpensesModal from "./ExpensesModal";
 import { useEffect, useState } from "react";
 import bankLogo from "../assets/bank.svg";
+import depositIcon from "../assets/deposit.svg";
+import withdrawIcon from "../assets/withdraw.svg";
+import transferIcon from "../assets/transfer.svg";
 
 const Dashboard = (props) => {
   const { loggedUser, setLoggedUser, setCurrentPage } = props;
@@ -13,6 +16,7 @@ const Dashboard = (props) => {
   const [transactionHistoryPreview, setTransactionHistoryPreview] = useState(
     []
   );
+  const [data, setCurrentData] = useState(loggedUser.transactions);
   // const [modalItem, setModalItem] = useState(0);
 
   useEffect(() => {
@@ -39,12 +43,13 @@ const Dashboard = (props) => {
       {showRecordsModal && (
         <RecordsModal
           setShowRecordsModal={setShowRecordsModal}
-          data={loggedUser.transactions}
+          data={data}
+          setCurrentData={setCurrentData}
         />
       )}
       {showExpensesModal && (
         <ExpensesModal
-          setShowRecordsModal={setShowRecordsModal}
+          setShowExpensesModal={setShowExpensesModal}
           data={loggedUser}
         />
       )}
@@ -59,7 +64,7 @@ const Dashboard = (props) => {
           <div className="flex flex-col justify-center rounded-2xl overflow-hidden shadow-lg">
             <div className="flex flex-col items-center justify-center px-10 pb-10 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 ">
               <img src={bankLogo} className="w-20 h-20 mb-4" alt="bank logo" />
-              <div className="flex flex-col w-full h-64 items-center bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900 rounded-lg shadow-lg shadow-2xl transition-transform transform hover:scale-110">
+              <div className="flex flex-col h-64 w-4/5 items-center bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900 rounded-lg shadow-lg shadow-2xl transition-transform transform hover:scale-110">
                 <div className="flex justify-between w-full m-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -115,30 +120,45 @@ const Dashboard = (props) => {
                   </div>
                 </div>
               </div>
+              <div className="flex text-center mt-4 font-quick justify-evenly">
+                <button
+                  className="w-1/5 text-center text-gray font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-emerald-400"
+                  value="Deposit"
+                  onClick={transactionButtonClickHandler}
+                >
+                  Deposit
+                  <img
+                    src={depositIcon}
+                    className="w-full pointer-events-none"
+                    alt="bank logo"
+                  />
+                </button>
+                <button
+                  className="w-1/5 text-center text-gray font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-emerald-400"
+                  value="Withdraw"
+                  onClick={transactionButtonClickHandler}
+                >
+                  Withdraw
+                  <img
+                    src={withdrawIcon}
+                    className="w-full pointer-events-none"
+                  />
+                </button>
+
+                <button
+                  className="w-1/5 text-gray font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-emerald-400"
+                  value="Transfer"
+                  onClick={transactionButtonClickHandler}
+                >
+                  Transfer
+                  <img
+                    src={transferIcon}
+                    className="w-full pointer-events-none"
+                  />
+                </button>
+              </div>
             </div>
-            <div className="flex text-center mt-8 mb-4 font-quick justify-evenly">
-              <button
-                className="text-gray font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-emerald-400"
-                value="Deposit"
-                onClick={transactionButtonClickHandler}
-              >
-                Deposit
-              </button>
-              <button
-                className="text-gray font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-emerald-400"
-                value="Withdraw"
-                onClick={transactionButtonClickHandler}
-              >
-                Withdrawal
-              </button>
-              <button
-                className="text-gray font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:bg-emerald-400"
-                value="Transfer"
-                onClick={transactionButtonClickHandler}
-              >
-                Transfer
-              </button>
-            </div>
+
             <div
               className={` w-full bg-white shadow-lg flex flex-col justify-center items-center ${
                 loggedUser.transactions.length === 0 ? "hidden" : ""
@@ -159,12 +179,6 @@ const Dashboard = (props) => {
                     <th className="w-1/4" scope="col">
                       Amount
                     </th>
-                    {/* <th className="w-1/6" scope="col">
-                      Running Balance
-                    </th>
-                    <th className="w-1/6" scope="col">
-                      Description
-                    </th> */}
                     <th className="w-1/4" scope="col">
                       Transaction Date
                     </th>
@@ -176,14 +190,18 @@ const Dashboard = (props) => {
                       <td>{item.transactionId} </td>
                       <td>{item.type} </td>
                       <td>{item.amount} </td>
-                      {/* <td>{item.balance} </td> */}
-                      {/* <td>{item.description} </td> */}
-                      <td>{Date(item.transactionDate).slice(4, 15)} </td>
+                      <td>
+                        {new Date(item.transactionDate).toString().slice(4, 15)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <button value="" onClick={() => setShowRecordsModal(true)}>
+              <button
+                className="underline mb-4"
+                value=""
+                onClick={() => setShowRecordsModal(true)}
+              >
                 Show All Transactions
               </button>
               <button value="" onClick={() => setShowExpensesModal(true)}>

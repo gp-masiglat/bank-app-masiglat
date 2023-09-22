@@ -5,13 +5,10 @@ import SignupForm from "./components/SignupForm";
 import Dashboard from "./components/Dashboard";
 
 function App() {
-  // useEffect(() => {
-  //   const userInfo = [
-  //     { username: "user1", password: "password1" },
-  //     { username: "user2", password: "password2" },
-  //   ];
-  //   localStorage.setItem("accounts", JSON.stringify(userInfo));
-  // }, []);
+  useEffect(() => {
+    setLoggedUser(JSON.parse(localStorage.getItem("accounts"))[0]);
+    setCurrentPage("dashboard");
+  }, []);
 
   const [currentPage, setCurrentPage] = useState("login");
   const [loggedUser, setLoggedUser] = useState({});
