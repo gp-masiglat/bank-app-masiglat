@@ -25,8 +25,6 @@ const TransactionModal = (props) => {
 
   const onModalItemChange = (e) => {
     const re = /^[0-9\b]+$/;
-
-    if (e.target.value === "") setModalItem(0);
     if (re.test(e.target.value)) setModalItem(e.target.value);
 
     setErrorMessage(
