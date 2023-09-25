@@ -21,7 +21,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     setTransactionHistoryPreview(loggedUser.transactions.slice(0, 3));
-  }, [loggedUser.transactions.length]);
+  }, [loggedUser.balance]);
 
   const transactionButtonClickHandler = (e) => {
     setModalTitle(e.target.value);
@@ -50,7 +50,7 @@ const Dashboard = (props) => {
       {showExpensesModal && (
         <ExpensesModal
           setShowExpensesModal={setShowExpensesModal}
-          data={loggedUser}
+          loggedUser={loggedUser}
         />
       )}
       <div className="w-2/5 h-full flex flex-col">

@@ -65,7 +65,7 @@ const TransactionModal = (props) => {
     loggedUser.balance += (title === "Deposit" ? 1 : -1) * modalItem;
     if (title === "Transfer") {
       receiverObject.balance += parseInt(modalItem);
-      loggedUser.transactions.push({
+      loggedUser.transactions.unshift({
         transactionId: (
           "TR" + Math.floor(Date.now() * Math.random())
         ).substring(0, 6),
