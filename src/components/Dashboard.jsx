@@ -9,23 +9,26 @@ import transferIcon from "../assets/transfer.svg";
 
 const Dashboard = (props) => {
   const { loggedUser, setLoggedUser, setCurrentPage } = props;
-  const [showTransactionModal, setShowTransactionModal] = useState(false);
-  const [showRecordsModal, setShowRecordsModal] = useState(false);
-  const [showExpensesModal, setShowExpensesModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
+
+  const [isRecordsModalVisible, setIsRecordsModalVisible] = useState(false);
+  const [isExpensesModalVisible, setIsExpensesModalVisible] = useState(false);
+
+  const [isTransactionModalVisible, setIsTransactionModalVisible] =
+    useState(false);
+  const [transactionModalTitle, setTransactionModalTitle] = useState("");
   const [transactionHistoryPreview, setTransactionHistoryPreview] = useState(
     []
   );
+
   const [data, setCurrentData] = useState(loggedUser.transactions);
-  // const [modalItem, setModalItem] = useState(0);
 
   useEffect(() => {
     setTransactionHistoryPreview(loggedUser.transactions.slice(0, 3));
   }, [loggedUser.balance]);
 
   const transactionButtonClickHandler = (e) => {
-    setModalTitle(e.target.value);
-    setShowTransactionModal(true);
+    setTransactionModalTitle(e.target.value);
+    setIsTransactionModalVisible(true);
   };
   const logoutHandler = () => {
     setLoggedUser("");
@@ -33,23 +36,23 @@ const Dashboard = (props) => {
   };
   return (
     <>
-      {showTransactionModal && (
+      {isTransactionModalVisible && (
         <TransactionModal
-          setShowTransactionModal={setShowTransactionModal}
-          title={modalTitle}
+          setIsTransactionModalVisible={setIsTransactionModalVisible}
+          title={transactionModalTitle}
           loggedUser={loggedUser}
         />
       )}
-      {showRecordsModal && (
+      {isRecordsModalVisible && (
         <RecordsModal
-          setShowRecordsModal={setShowRecordsModal}
+          setIsRecordsModalVisible={setIsRecordsModalVisible}
           data={data}
           setCurrentData={setCurrentData}
         />
       )}
-      {showExpensesModal && (
+      {isExpensesModalVisible && (
         <ExpensesModal
-          setShowExpensesModal={setShowExpensesModal}
+          setIsExpensesModalVisible={setIsExpensesModalVisible}
           loggedUser={loggedUser}
         />
       )}
@@ -198,16 +201,19 @@ const Dashboard = (props) => {
                 </tbody>
               </table>
               <button
-                className="underline mb-4"
+                className="underline mb-12"
                 value=""
-                onClick={() => setShowRecordsModal(true)}
+                onClick={() => setIsRecordsModalVisible(true)}
               >
                 Show All Transactions
               </button>
-              <button value="" onClick={() => setShowExpensesModal(true)}>
-                Manage Expenses
-              </button>
             </div>
+            <button
+              className="inline-block rounded border-2 border-info px-6 pb-[6px] pt-2 text-2xl font-medium uppercase leading-normal text-info transition duration-150 ease-in-out hover:border-info-600 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-info-600 focus:border-info-600 focus:text-info-600 focus:outline-none focus:ring-0 active:border-info-700 active:text-info-700"
+              onClick={() => setIsExpensesModalVisible(true)}
+            >
+              Manage Expenses
+            </button>
           </div>
         </div>
       </div>

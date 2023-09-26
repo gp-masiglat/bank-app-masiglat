@@ -214,7 +214,9 @@ const SignupForm = (props) => {
         value={password}
         onChange={onPasswordChange}
       />
-      <p className="text-red-700 text-m whitespace-pre-line	">{passwordError}</p>
+      <p className="text-red-700 text-m whitespace-pre-line	 bg-gray-200">
+        {passwordError}
+      </p>
       <Input
         key="confirmPassword"
         label="Confirm Password"

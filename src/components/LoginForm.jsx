@@ -26,7 +26,7 @@ const LoginForm = (props) => {
         setLoggedUser(userObject);
       }
     }
-    setErrorMessage("Username or Password is incorrect!");
+    setErrorMessage("*Username or Password is incorrect!");
   };
 
   return (
@@ -59,7 +59,7 @@ const LoginForm = (props) => {
         >
           Login
         </button>
-        <h1 className="text-red-700 text-m">{errorMessage}</h1>
+        <h1 className="text-red-700 text-2xl bg-gray-200">{errorMessage}</h1>
         <a
           className="underline"
           href="#"

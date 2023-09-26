@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Pagination from "./Pagination";
 
 const Records = (props) => {
-  const { setShowRecordsModal, data, setCurrentData } = props;
+  const { setIsRecordsModalVisible, data, setCurrentData } = props;
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(5);
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -84,7 +84,7 @@ const Records = (props) => {
               <h3 className="text-3xl font-semibold">Transaction Records</h3>
               <button
                 className="p-1 ml-auto text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={() => setShowRecordsModal(false)}
+                onClick={() => setIsRecordsModalVisible(false)}
               >
                 <span className="text-black h-6 w-6 text-2xl block focus:outline-none">
                   ×
@@ -205,7 +205,7 @@ const Records = (props) => {
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowRecordsModal(false)}
+                onClick={() => setIsRecordsModalVisible(false)}
               >
                 Close
               </button>

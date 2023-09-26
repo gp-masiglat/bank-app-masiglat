@@ -5,10 +5,10 @@ import SignupForm from "./components/SignupForm";
 import Dashboard from "./components/Dashboard";
 
 function App() {
-  useEffect(() => {
-    setLoggedUser(JSON.parse(localStorage.getItem("accounts"))[0]);
-    setCurrentPage("dashboard");
-  }, []);
+  // useEffect(() => {
+  //   setLoggedUser(JSON.parse(localStorage.getItem("accounts"))[0]);
+  //   setCurrentPage("dashboard");
+  // }, []);
 
   const [currentPage, setCurrentPage] = useState("login");
   const [loggedUser, setLoggedUser] = useState({});
