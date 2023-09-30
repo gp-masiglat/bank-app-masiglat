@@ -9,7 +9,7 @@ const ExpensesModal = (props) => {
   const [expenseAmount, setExpenseAmount] = useState("");
   const [expenseDescription, setExpenseDescription] = useState("");
   const [isExpenseFormVisible, setIsExpenseFormVisible] = useState(false);
-  const [expenseItemToEdit, setExpenseItemToEdit] = useState("");
+  const [expenseItemToEdit, setExpenseItemToEdit] = useState({});
 
   const [data, setCurrentData] = useState(loggedUser.expenses);
   const [currentPage, setCurrentPage] = useState(1);
@@ -104,24 +104,25 @@ const ExpensesModal = (props) => {
     setCurrentData(sortedArray);
   };
 
-  const editHandler = (e) => {
-    console.log(data);
-    const expenseObject = loggedUser.expenses.find(
-      (expenseObject) => expenseObject.transactionId === e.target.value
-    );
+  const editHandler = (expenseObject) => {
+    // const expenseObject = loggedUser.expenses.find(
+    //   (expenseObject) => expenseObject.transactionId === e.target.value
+    // );
     setExpenseAmount(expenseObject.amount);
     setExpenseItem(expenseObject.item);
     setExpenseDescription(expenseObject.description);
     setIsExpenseFormVisible(true);
-    setExpenseItemToEdit(e.target.value);
+    // setExpenseItemToEdit(e.target.value);
+    setExpenseItemToEdit(expenseObject);
   };
 
-  const deleteHandler = (e) => {
-    const expenseObject = loggedUser.expenses.find(
-      (expenseObject) => expenseObject.transactionId === e.target.value
-    );
+  const deleteHandler = (expenseObject) => {
+    // const expenseObject = loggedUser.expenses.find(
+    //   (expenseObject) => expenseObject.transactionId === e.target.value
+    // );
     const transactionObject = loggedUser.transactions.find(
-      (transactionObject) => transactionObject.transactionId === e.target.value
+      (transactionObject) =>
+        transactionObject.transactionId === expenseObject.transactionId
     );
 
     loggedUser.expenses.splice(loggedUser.expenses.indexOf(expenseObject), 1);
@@ -147,8 +148,7 @@ const ExpensesModal = (props) => {
     loggedUser.balance = loggedUser.balance - expenseAmount;
     const userInfo = JSON.parse(localStorage.getItem("accounts"));
 
-    if (expenseItemToEdit != "")
-      deleteHandler({ target: { value: expenseItemToEdit } });
+    if (expenseItemToEdit != "") deleteHandler(expenseItemToEdit);
 
     const expenseObject = {
       transactionId: ("EX" + Math.floor(Date.now() * Math.random())).substring(
@@ -349,15 +349,15 @@ const ExpensesModal = (props) => {
                       </td>
                       <td>
                         <button
-                          value={item.transactionId}
-                          onClick={editHandler}
+                          // value={item.transactionId}
+                          onClick={() => editHandler(item)}
                           className="underline"
                         >
                           Edit
                         </button>
                         <button
-                          value={item.transactionId}
-                          onClick={deleteHandler}
+                          // value={item.transactionId}
+                          onClick={() => deleteHandler(item)}
                           className="underline"
                         >
                           Delete

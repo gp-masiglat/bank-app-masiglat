@@ -24,6 +24,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     setTransactionHistoryPreview(loggedUser.transactions.slice(0, 3));
+    setLoggedUser(loggedUser);
   }, [loggedUser.balance]);
 
   const transactionButtonClickHandler = (e) => {
