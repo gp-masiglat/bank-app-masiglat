@@ -29,13 +29,14 @@ const SignupForm = (props) => {
     if (confirmPassword != "")
       onConfirmPasswordChange({ target: { value: confirmPassword } });
   }, [password]);
+  // useEffect(() => console.log(errorFieldArray));
 
   const checkIfEmpty = (fieldName, value) => {
     let errorObject = errorFieldArray.findIndex(
       (userObject) => userObject.errorField === fieldName
     );
     if (value === "") {
-      if (!errorObject) errorFieldArray.push({ errorField: fieldName });
+      if (errorObject === -1) errorFieldArray.push({ errorField: fieldName });
       return `*Please input ${fieldName}!`;
     }
     if (errorObject > -1) errorFieldArray.splice(errorObject, 1);
@@ -92,12 +93,12 @@ const SignupForm = (props) => {
     let errorObject = errorFieldArray.find(
       (userObject) => userObject.errorField === "Confirm Password"
     );
-
+    console.log(errorObject);
     if (password != e.target.value) {
       setConfirmPasswordError("*Passwords do not match!");
-      if (!errorObject) errorFieldArray.push("Confirm Password");
+      if (errorObject === undefined) errorFieldArray.push("Confirm Password");
     } else {
-      if (errorObject)
+      if (errorObject && password != "")
         errorFieldArray.splice(errorFieldArray.indexOf(errorObject), 1);
       setConfirmPasswordError("");
     }
