@@ -9,19 +9,11 @@ const TransactionModal = (props) => {
   const [receiverObject, setReceiverObject] = useState({});
   const [userInfo, setUserInfo] = useState({});
   const [receiverError, setReceiverError] = useState(false);
-  // const [transactionInfo, setTransactionInfo] = useState({});
 
   useEffect(() => {
-    // if (title === "Transfer") {
     setUserInfo(JSON.parse(localStorage.getItem("accounts")));
     setReceiverError(true);
-    // }
   }, []);
-
-  //   useEffect(() => {
-  //     if (Object.keys(transactionInfo).length != 0)
-  //       loggedUser.trasactions.push(transactionInfo);
-  //   }, [transactionInfo]);
 
   const onModalItemChange = (e) => {
     const re = /^[0-9\b]+$/;

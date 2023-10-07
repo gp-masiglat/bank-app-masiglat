@@ -30,10 +30,6 @@ const ExpensesModal = (props) => {
     setCurrentRecords(data.slice(indexOfFirstRecord, indexOfLastRecord));
   }, [isTIdAsc, isTTypeAsc, isTAmountAsc, isTDateAsc, currentPage]);
 
-  // useEffect(() => {
-  //   setCurrentData(loggedUser.expenses);
-  // }, [data]);
-
   useEffect(() => {
     if (!isExpenseFormVisible) {
       setExpenseAmount("");
@@ -105,21 +101,14 @@ const ExpensesModal = (props) => {
   };
 
   const editHandler = (expenseObject) => {
-    // const expenseObject = loggedUser.expenses.find(
-    //   (expenseObject) => expenseObject.transactionId === e.target.value
-    // );
     setExpenseAmount(expenseObject.amount);
     setExpenseItem(expenseObject.item);
     setExpenseDescription(expenseObject.description);
     setIsExpenseFormVisible(true);
-    // setExpenseItemToEdit(e.target.value);
     setExpenseItemToEdit(expenseObject);
   };
 
   const deleteHandler = (expenseObject) => {
-    // const expenseObject = loggedUser.expenses.find(
-    //   (expenseObject) => expenseObject.transactionId === e.target.value
-    // );
     const transactionObject = loggedUser.transactions.find(
       (transactionObject) =>
         transactionObject.transactionId === expenseObject.transactionId
@@ -164,7 +153,6 @@ const ExpensesModal = (props) => {
     };
     loggedUser.expenses.unshift(expenseObject);
     loggedUser.transactions.unshift(expenseObject);
-    //setloggeduser via usestate
 
     userInfo[
       userInfo.findIndex((object) => {
@@ -349,14 +337,12 @@ const ExpensesModal = (props) => {
                       </td>
                       <td>
                         <button
-                          // value={item.transactionId}
                           onClick={() => editHandler(item)}
                           className="underline"
                         >
                           Edit
                         </button>
                         <button
-                          // value={item.transactionId}
                           onClick={() => deleteHandler(item)}
                           className="underline"
                         >

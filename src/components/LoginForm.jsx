@@ -7,7 +7,6 @@ const LoginForm = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [userInfo, setUserInfo] = useState([]);
 
   const onUsernameChange = (e) => setUsername(e.target.value);
   const onPasswordChange = (e) => setPassword(e.target.value);

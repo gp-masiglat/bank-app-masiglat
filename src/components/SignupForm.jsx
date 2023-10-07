@@ -29,7 +29,6 @@ const SignupForm = (props) => {
     if (confirmPassword != "")
       onConfirmPasswordChange({ target: { value: confirmPassword } });
   }, [password]);
-  // useEffect(() => console.log(errorFieldArray));
 
   const checkIfEmpty = (fieldName, value) => {
     let errorObject = errorFieldArray.findIndex(
