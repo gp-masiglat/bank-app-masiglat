@@ -4,7 +4,6 @@ import bankLogo from "../assets/bank.svg";
 
 const SignupForm = (props) => {
   const { setCurrentPage } = props;
-  // const [userInfo, setUserInfo] = useState([]);
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -26,10 +25,6 @@ const SignupForm = (props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
 
-  // useEffect(() => {
-  //   console.log(new Date());
-  // }, []);
-
   useEffect(() => {
     if (confirmPassword != "")
       onConfirmPasswordChange({ target: { value: confirmPassword } });
@@ -40,7 +35,7 @@ const SignupForm = (props) => {
       (userObject) => userObject.errorField === fieldName
     );
     if (value === "") {
-      if (!errorObject) errorFieldArray.push({ errorField: fieldName });
+      if (errorObject === -1) errorFieldArray.push({ errorField: fieldName });
       return `*Please input ${fieldName}!`;
     }
     if (errorObject > -1) errorFieldArray.splice(errorObject, 1);
@@ -93,18 +88,16 @@ const SignupForm = (props) => {
     setLastNameError(checkIfEmpty("Last Name", e.target.value));
   };
   const onConfirmPasswordChange = (e) => {
-    console.log(e.target.value);
     setConfirmPassword(e.target.value);
     let errorObject = errorFieldArray.find(
       (userObject) => userObject.errorField === "Confirm Password"
     );
-
+    console.log(errorObject);
     if (password != e.target.value) {
       setConfirmPasswordError("*Passwords do not match!");
-      if (!errorObject) errorFieldArray.push("Confirm Password");
-      // return;
+      if (errorObject === undefined) errorFieldArray.push("Confirm Password");
     } else {
-      if (errorObject)
+      if (errorObject && password != "")
         errorFieldArray.splice(errorFieldArray.indexOf(errorObject), 1);
       setConfirmPasswordError("");
     }
@@ -112,24 +105,22 @@ const SignupForm = (props) => {
 
   const onEmailAddressChange = (e) => {
     setEmailAddress(e.target.value.toUpperCase());
+    let errorMessage = "";
 
     let errorObject = errorFieldArray.find(
       (userObject) => userObject.errorField === "Email Address"
     );
 
-    if (e.target.value === "") setEmailError("Email Address Cannot be empty!");
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value))
-      setEmailError("Please follow the following format (example@example.com");
+      errorMessage = "*Please follow the following format (example@example.com";
+    if (e.target.value === "") errorMessage = "*Email Address Cannot be Empty";
 
-    if (emailError != "") errorFieldArray.push("Email Address");
+    if (emailError != "" && errorObject) errorFieldArray.push("Email Address");
     else {
-      // if (emailError != "") {
-      setEmailError("");
       if (errorObject)
         errorFieldArray.splice(errorFieldArray.indexOf(errorObject), 1);
-      setEmailError("");
-      // }
     }
+    setEmailError(errorMessage);
   };
 
   const submitHandler = (e) => {
@@ -148,10 +139,6 @@ const SignupForm = (props) => {
       return;
     }
 
-    // let accountNumber = ("" + Math.random()).substring(2, 14);
-    // while (
-    //   userInfo.find((userObject) => userObject.accountNumber === accountNumber)
-    // )
     const accountNumber = (
       "" + Math.floor(Date.now() * Math.random())
     ).substring(0, 12);
@@ -167,8 +154,6 @@ const SignupForm = (props) => {
       expenses: [],
       transactions: [],
     });
-    // localStorage.removeItem("accounts");
-    // console.log(userInfo);
     localStorage.setItem("accounts", JSON.stringify(userInfo));
     setCurrentPage("login");
   };
@@ -187,7 +172,9 @@ const SignupForm = (props) => {
         value={firstName}
         onChange={onFirstNameChange}
       />
-      <p className="text-red-700 text-m">{firstNameError}</p>
+      <p className="text-red-700 text-m whitespace-pre-line	 bg-gray-200">
+        {firstNameError}
+      </p>
       <Input
         key="lastName"
         label="Last Name"
@@ -196,7 +183,9 @@ const SignupForm = (props) => {
         value={lastName}
         onChange={onLastNameChange}
       />
-      <p className="text-red-700 text-m">{lastNameError}</p>
+      <p className="text-red-700 text-m whitespace-pre-line	 bg-gray-200">
+        {lastNameError}
+      </p>
       <Input
         key="username"
         label="Username"
@@ -205,7 +194,9 @@ const SignupForm = (props) => {
         value={username}
         onChange={onUsernameChange}
       />
-      <p className="text-red-700 text-m">{usernameError}</p>
+      <p className="text-red-700 text-m whitespace-pre-line	 bg-gray-200">
+        {usernameError}
+      </p>
       <Input
         key="password"
         label="Password"
@@ -214,7 +205,9 @@ const SignupForm = (props) => {
         value={password}
         onChange={onPasswordChange}
       />
-      <p className="text-red-700 text-m whitespace-pre-line	">{passwordError}</p>
+      <p className="text-red-700 text-m whitespace-pre-line	 bg-gray-200">
+        {passwordError}
+      </p>
       <Input
         key="confirmPassword"
         label="Confirm Password"
@@ -223,7 +216,9 @@ const SignupForm = (props) => {
         value={confirmPassword}
         onChange={onConfirmPasswordChange}
       />
-      <p className="text-red-700 text-m">{cofimPasswordError}</p>
+      <p className="text-red-700 text-m whitespace-pre-line	 bg-gray-200">
+        {cofimPasswordError}
+      </p>
       <Input
         key="emailAddress"
         label="Email Address"
@@ -232,7 +227,9 @@ const SignupForm = (props) => {
         value={emailAddress}
         onChange={onEmailAddressChange}
       />
-      <p className="text-red-700 text-m">{emailError}</p>
+      <p className="text-red-700 text-m whitespace-pre-line	 bg-gray-200">
+        {emailError}
+      </p>
       <button
         className="bg-blue-500 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-700 disabled:cursor-not-allowed"
         type="submit"

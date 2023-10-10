@@ -2,26 +2,18 @@ import { useEffect, useState } from "react";
 import Input from "./Input";
 
 const TransactionModal = (props) => {
-  const { setShowTransactionModal, title, loggedUser } = props;
+  const { setIsTransactionModalVisible, title, loggedUser } = props;
   const [modalItem, setModalItem] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [receiverItem, setReceiverItem] = useState("");
   const [receiverObject, setReceiverObject] = useState({});
   const [userInfo, setUserInfo] = useState({});
   const [receiverError, setReceiverError] = useState(false);
-  // const [transactionInfo, setTransactionInfo] = useState({});
 
   useEffect(() => {
-    // if (title === "Transfer") {
     setUserInfo(JSON.parse(localStorage.getItem("accounts")));
     setReceiverError(true);
-    // }
   }, []);
-
-  //   useEffect(() => {
-  //     if (Object.keys(transactionInfo).length != 0)
-  //       loggedUser.trasactions.push(transactionInfo);
-  //   }, [transactionInfo]);
 
   const onModalItemChange = (e) => {
     const re = /^[0-9\b]+$/;
@@ -103,8 +95,7 @@ const TransactionModal = (props) => {
       })
     ] = loggedUser;
     localStorage.setItem("accounts", JSON.stringify(userInfo));
-    // console.log(JSON.stringify(userInfo));
-    setShowTransactionModal(false);
+    setIsTransactionModalVisible(false);
   };
   return (
     <>
@@ -117,7 +108,7 @@ const TransactionModal = (props) => {
               <h3 className="text-3xl font-semibold">{title}</h3>
               <button
                 className="p-1 ml-auto text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={() => setShowTransactionModal(false)}
+                onClick={() => setIsTransactionModalVisible(false)}
               >
                 <span className="text-black h-6 w-6 text-2xl block focus:outline-none">
                   ×
@@ -154,7 +145,7 @@ const TransactionModal = (props) => {
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowTransactionModal(false)}
+                onClick={() => setIsTransactionModalVisible(false)}
               >
                 Close
               </button>

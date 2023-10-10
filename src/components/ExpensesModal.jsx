@@ -3,13 +3,41 @@ import Input from "./Input";
 import Pagination from "./Pagination";
 
 const ExpensesModal = (props) => {
-  const { setShowExpensesModal, loggedUser } = props;
-  const [data, setCurrentData] = useState(loggedUser.expenses);
+  const { setIsExpensesModalVisible, loggedUser } = props;
+
   const [expenseItem, setExpenseItem] = useState("");
   const [expenseAmount, setExpenseAmount] = useState("");
   const [expenseDescription, setExpenseDescription] = useState("");
-  const [showExpensesForm, setShowExpensesForm] = useState(false);
-  const [expenseItemToEdit, setExpenseItemToEdit] = useState("");
+  const [isExpenseFormVisible, setIsExpenseFormVisible] = useState(false);
+  const [expenseItemToEdit, setExpenseItemToEdit] = useState({});
+
+  const [data, setCurrentData] = useState(loggedUser.expenses);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage] = useState(5);
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const [currentRecords, setCurrentRecords] = useState(
+    data.slice(indexOfFirstRecord, indexOfLastRecord)
+  );
+  const nPages = Math.ceil(data.length / recordsPerPage);
+
+  const [isTIdAsc, setIsTIdAsc] = useState(false);
+  const [isTTypeAsc, setIsTTypeAsc] = useState(false);
+  const [isTAmountAsc, setIsTAmountAsc] = useState(false);
+  const [isTDateAsc, setIsTDateAsc] = useState(false);
+
+  useEffect(() => {
+    setCurrentRecords(data.slice(indexOfFirstRecord, indexOfLastRecord));
+  }, [isTIdAsc, isTTypeAsc, isTAmountAsc, isTDateAsc, currentPage]);
+
+  useEffect(() => {
+    if (!isExpenseFormVisible) {
+      setExpenseAmount("");
+      setExpenseItem("");
+      setExpenseDescription("");
+      setExpenseItemToEdit("");
+    }
+  }, [isExpenseFormVisible]);
 
   const expenseItemChangeHandler = (e) => setExpenseItem(e.target.value);
   const expenseDescriptionChangeHandler = (e) =>
@@ -18,36 +46,6 @@ const ExpensesModal = (props) => {
     const re = /^[0-9\b]+$/;
     if (re.test(e.target.value)) setExpenseAmount(e.target.value);
   };
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage] = useState(5);
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const [currentRecords, setCurrentRecords] = useState(
-    data.slice(indexOfFirstRecord, indexOfLastRecord)
-  );
-  const [isTIdAsc, setIsTIdAsc] = useState(false);
-  const [isTTypeAsc, setIsTTypeAsc] = useState(false);
-  const [isTAmountAsc, setIsTAmountAsc] = useState(false);
-  const [isTDateAsc, setIsTDateAsc] = useState(false);
-  const nPages = Math.ceil(data.length / recordsPerPage);
-
-  useEffect(() => {
-    setCurrentRecords(data.slice(indexOfFirstRecord, indexOfLastRecord));
-  }, [isTIdAsc, isTTypeAsc, isTAmountAsc, isTDateAsc, currentPage]);
-
-  useEffect(() => {
-    setCurrentData(loggedUser.expenses);
-  }, [data]);
-
-  useEffect(() => {
-    if (!showExpensesForm) {
-      setExpenseAmount("");
-      setExpenseItem("");
-      setExpenseDescription("");
-      setExpenseItemToEdit("");
-    }
-  }, [showExpensesForm]);
 
   const transactionCLickHandler = () => {
     const sortedArray = data.sort((a, b) => {
@@ -102,24 +100,26 @@ const ExpensesModal = (props) => {
     setCurrentData(sortedArray);
   };
 
-  const editHandler = (e) => {
-    console.log(data);
-    const expenseObject = loggedUser.expenses.find(
-      (expenseObject) => expenseObject.transactionId === e.target.value
-    );
+  const editHandler = (expenseObject) => {
     setExpenseAmount(expenseObject.amount);
     setExpenseItem(expenseObject.item);
     setExpenseDescription(expenseObject.description);
-    setShowExpensesForm(true);
-    setExpenseItemToEdit(e.target.value);
+    setIsExpenseFormVisible(true);
+    setExpenseItemToEdit(expenseObject);
   };
 
-  const deleteHandler = (e) => {
-    const expenseObject = loggedUser.expenses.find(
-      (expenseObject) => expenseObject.transactionId === e.target.value
+  const deleteHandler = (expenseObject) => {
+    const transactionObject = loggedUser.transactions.find(
+      (transactionObject) =>
+        transactionObject.transactionId === expenseObject.transactionId
     );
 
     loggedUser.expenses.splice(loggedUser.expenses.indexOf(expenseObject), 1);
+    if (expenseObject)
+      loggedUser.transactions.splice(
+        loggedUser.transactions.indexOf(transactionObject),
+        1
+      );
     loggedUser.balance += expenseObject.amount;
     const userInfo = JSON.parse(localStorage.getItem("accounts"));
 
@@ -137,8 +137,7 @@ const ExpensesModal = (props) => {
     loggedUser.balance = loggedUser.balance - expenseAmount;
     const userInfo = JSON.parse(localStorage.getItem("accounts"));
 
-    if (expenseItemToEdit != "")
-      deleteHandler({ target: { value: expenseItemToEdit } });
+    if (expenseItemToEdit != "") deleteHandler(expenseItemToEdit);
 
     const expenseObject = {
       transactionId: ("EX" + Math.floor(Date.now() * Math.random())).substring(
@@ -152,8 +151,8 @@ const ExpensesModal = (props) => {
       description: expenseDescription,
       transactionDate: new Date().toJSON(),
     };
-    // loggedUser.transactions.unshift(expenseObject);
     loggedUser.expenses.unshift(expenseObject);
+    loggedUser.transactions.unshift(expenseObject);
 
     userInfo[
       userInfo.findIndex((object) => {
@@ -163,10 +162,10 @@ const ExpensesModal = (props) => {
     localStorage.setItem("accounts", JSON.stringify(userInfo));
     setCurrentData(loggedUser.expenses);
     setCurrentRecords(data.slice(indexOfFirstRecord, indexOfLastRecord));
-    setShowExpensesForm(false);
+    setIsExpenseFormVisible(false);
   };
 
-  const cancelHandler = () => setShowExpensesForm(false);
+  const cancelHandler = () => setIsExpenseFormVisible(false);
 
   return (
     <>
@@ -179,7 +178,7 @@ const ExpensesModal = (props) => {
               <h3 className="text-3xl font-semibold">Manage Expenses</h3>
               <button
                 className="p-1 ml-auto text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={() => setShowExpensesModal(false)}
+                onClick={() => setIsExpensesModalVisible(false)}
               >
                 <span className="text-black h-6 w-6 text-2xl block focus:outline-none">
                   ×
@@ -188,7 +187,7 @@ const ExpensesModal = (props) => {
             </div>
             {/*body*/}
             <form
-              className={`w-full ${showExpensesForm ? "" : "hidden"}`}
+              className={`w-full ${isExpenseFormVisible ? "" : "hidden"}`}
               onSubmit={submitHandler}
             >
               <div
@@ -338,15 +337,13 @@ const ExpensesModal = (props) => {
                       </td>
                       <td>
                         <button
-                          value={item.transactionId}
-                          onClick={editHandler}
+                          onClick={() => editHandler(item)}
                           className="underline"
                         >
                           Edit
                         </button>
                         <button
-                          value={item.transactionId}
-                          onClick={deleteHandler}
+                          onClick={() => deleteHandler(item)}
                           className="underline"
                         >
                           Delete
@@ -367,14 +364,14 @@ const ExpensesModal = (props) => {
               <button
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowExpensesModal(false)}
+                onClick={() => setIsExpensesModalVisible(false)}
               >
                 Close
               </button>{" "}
               <button
                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setShowExpensesForm(true)}
+                onClick={() => setIsExpenseFormVisible(true)}
               >
                 Add Expense Item
               </button>
